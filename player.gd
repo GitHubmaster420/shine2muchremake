@@ -28,20 +28,23 @@ const BULLET = preload("uid://bm51xp3emdojp")
 
 @export var controlled_by_player := false
 
+var is_shot_just_pressed := false
+
+var input_dir := Vector2.ZERO
+
+var created_at_start := true
+
 func _ready() -> void:
 	forward_rad_max_speed = forward_max_speed / radius
 	forward_rad_accel = forward_accel / radius
 	(material as ShaderMaterial).set_shader_parameter("size_inverse", 0.5 * radius / player_radius)
 	world.players.append(self)
 	
-	basis = Basis.from_euler(Vector3(yaw, pitch, roll))
+	if created_at_start:
+		basis = Basis.from_euler(Vector3(yaw, pitch, roll))
 	sphere_pos = basis.z
 
 func _physics_process(delta: float) -> void:
-	
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_down", "ui_up")
-	if not controlled_by_player:
-		input_dir = Vector2.ZERO
 	velocity.x = move_toward(velocity.x, input_dir.x * roll_max_speed, delta * roll_accel)
 	velocity.y = move_toward(velocity.y, input_dir.y * forward_rad_max_speed, delta * forward_rad_accel)
 	basis = basis.rotated(basis.z, velocity.x * delta)
@@ -50,7 +53,7 @@ func _physics_process(delta: float) -> void:
 	(material as ShaderMaterial).set_shader_parameter("world_rot", world.basis) #TODO: understand why not inverse lol
 	(material as ShaderMaterial).set_shader_parameter("player_rot", basis.inverse())
 	
-	if Input.is_action_just_pressed("ui_accept") and controlled_by_player:
+	if is_shot_just_pressed:
 		var b : Bullet = BULLET.instantiate()
 		b.visible = false
 		(b as Bullet).basis = basis.rotated(basis.x, ((player_radius + b.player_radius) / radius * PI + 0.001))
