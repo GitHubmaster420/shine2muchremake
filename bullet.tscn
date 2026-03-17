@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bm51xp3emdojp"]
+
+[ext_resource type="Shader" uid="uid://bejysw8nhhpfh" path="res://player.gdshader" id="1_t4vbm"]
+[ext_resource type="Texture2D" uid="uid://c1xttrwwnq8oq" path="res://moon.png" id="2_t4vbm"]
+[ext_resource type="Script" uid="uid://coapvncpo0iwr" path="res://bullet.gd" id="3_b7duk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t2bd8"]
+resource_local_to_scene = true
+shader = ExtResource("1_t4vbm")
+shader_parameter/tex = ExtResource("2_t4vbm")
+shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/size_inverse = 20.0
+
+[node name="Bullet" type="ColorRect"]
+material = SubResource("ShaderMaterial_t2bd8")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -539.0
+offset_top = -540.0
+offset_right = 541.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_b7duk")
+forward_max_speed = 300.0
+player_radius = 2.5
