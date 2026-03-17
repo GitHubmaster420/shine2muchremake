@@ -8,6 +8,8 @@ var sphere_pos : Vector3
 
 var basis : Basis = Basis.IDENTITY
 
+const LASER_SHOOT = preload("uid://d3j1fcdkn7le8")
+
 @export_range(-PI, PI, 0.1) var yaw := 0.0
 @export_range(-PI, PI, 0.1) var pitch := 0.0
 @export_range(-PI, PI, 0.1) var roll := 0.0
@@ -47,13 +49,15 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, input_dir.x * roll_max_speed, delta * roll_accel)
 	velocity.y = move_toward(velocity.y, input_dir.y * forward_rad_max_speed, delta * forward_rad_accel)
-	basis = basis.rotated(basis.z, velocity.x * delta)
-	basis = basis.rotated(basis.x, velocity.y * delta)
+	basis = basis.rotated(basis.z.normalized(), velocity.x * delta).orthonormalized()
+	basis = basis.rotated(basis.x.normalized(), velocity.y * delta).orthonormalized()
 	sphere_pos = basis.z
 	(material as ShaderMaterial).set_shader_parameter("world_rot", world.basis) #TODO: understand why not inverse lol
 	(material as ShaderMaterial).set_shader_parameter("player_rot", basis.inverse())
 	
 	if is_shot_just_pressed:
+		world.audio_stream_player.stream = LASER_SHOOT
+		world.audio_stream_player.play()
 		var b : Bullet = BULLET.instantiate()
 		b.visible = false
 		(b as Bullet).basis = basis.rotated(basis.x, ((player_radius + b.player_radius) / radius * PI + 0.001))

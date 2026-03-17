@@ -2,7 +2,7 @@ extends Node
 
 @export var player : Player
 
-var time_until_next_shot := 1.0
+var time_until_next_shot := 5.0
 
 func _physics_process(delta: float) -> void:
 	player.input_dir.y = 1

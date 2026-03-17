@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://6tygshsbrwir"]
+[gd_scene load_steps=14 format=3 uid="uid://6tygshsbrwir"]
 
 [ext_resource type="Script" uid="uid://bg4bmgnoyswjk" path="res://world.gd" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://bxrr62yiw7tjn" path="res://world.gdshader" id="1_fj7yv"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://c7kevfbna3mcb" path="res://player.gd" id="4_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://bsi1qtpjlla5i" path="res://earth.png" id="5_dwbse"]
 [ext_resource type="Script" uid="uid://dsd568enkgmcn" path="res://player_controller.gd" id="7_ioo17"]
+[ext_resource type="Texture2D" uid="uid://bcur187o7wsag" path="res://LavaPlanets.png" id="9_ioo17"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aqk2v"]
 shader = ExtResource("1_fj7yv")
@@ -17,6 +18,86 @@ shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_036b0"]
 shader = ExtResource("3_tlwt5")
 shader_parameter/tex = ExtResource("5_dwbse")
+shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/size_inverse = 10.0
+
+[sub_resource type="Shader" id="Shader_wse8f"]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform sampler2D tex;
+
+uniform mat3 world_rot = mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1));
+uniform mat3 player_rot = mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1));
+
+uniform float size_inverse = 10.0;
+
+vec3 rotate_around_axis(vec3 v, vec3 axis, float angle) {
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+
+    return v * c +
+           cross(axis, v) * s +
+           axis * dot(axis, v) * oc;
+}
+
+vec3 circle_to_sphere(vec2 circle_uv){
+	float alpha = atan(circle_uv.y, circle_uv.x);
+
+	float circle_radius = 0.5;
+	float d = length(circle_uv) / circle_radius * PI;
+
+	vec3 rotate_around = vec3(cos(alpha), sin(alpha), 0);
+	vec3 vector_to_rotate = vec3(0, 0, 1);
+
+	vec3 rotated = rotate_around_axis(vector_to_rotate, rotate_around, d);
+
+	return rotated;
+}
+
+vec2 sphere_to_uv(vec3 sphere_pos){
+	//u = 0.5 + atan(z,x) / 2PI
+	//v = 0.5 + asin(y)/PI
+	float u = 0.5 + atan(sphere_pos.x, sphere_pos.z) / PI;
+	float v = 0.5 + asin(sphere_pos.y) / PI;
+
+	return vec2(u, v);
+}
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+	vec2 uv_local = UV - vec2(0.5);
+	uv_local = vec2(-uv_local.y, uv_local.x);
+	if (length(uv_local) > 0.5){
+		discard;
+	}
+	vec3 surface_location = circle_to_sphere(uv_local);
+	surface_location = player_rot * world_rot  * surface_location;
+	vec2 uv_sphere = sphere_to_uv(surface_location);
+	uv_sphere -= vec2(0.5);
+	
+	uv_sphere *= size_inverse;
+	if(uv_sphere.x < -0.5 || uv_sphere.x > 0.5 || uv_sphere.y < -0.5 || uv_sphere.y > 0.5){
+		discard;
+	}
+	uv_sphere += vec2(0.5);
+	
+	
+
+	COLOR = texture(tex, uv_sphere);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ic0uy"]
+resource_local_to_scene = true
+shader = SubResource("Shader_wse8f")
+shader_parameter/tex = ExtResource("9_ioo17")
 shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/size_inverse = 10.0
@@ -69,6 +150,7 @@ script = ExtResource("7_ioo17")
 player = NodePath("..")
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("world") instance=ExtResource("2_gbfbk")]
+material = SubResource("ShaderMaterial_ic0uy")
 world = NodePath("..")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -84,3 +166,5 @@ offset_bottom = 63.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 60
 text = "Score: 0"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

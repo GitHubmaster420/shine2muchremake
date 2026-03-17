@@ -3,6 +3,8 @@ class_name World extends Node2D
 @onready var world_surface: ColorRect = $WorldSurface
 @onready var player: Player = $Player
 
+const EXPLOSION = preload("uid://c2d7cuatruidk")
+
 @export var radius := 100.0
 
 var basis : Basis
@@ -21,6 +23,9 @@ var score := 0:
 			return
 		score = v
 		score_label.text = "Score: " + str(score)
+
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
+
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -42,6 +47,8 @@ func _physics_process(_delta: float) -> void:
 				
 		for o in bullets:
 			if (p.sphere_pos).angle_to(o.sphere_pos) < (p.player_radius + o.player_radius) / radius * PI:
+				audio_stream_player.stream = EXPLOSION
+				audio_stream_player.play()
 				players.erase(p)
 				p.queue_free()
 				

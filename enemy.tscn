@@ -6,13 +6,14 @@
 [ext_resource type="Script" uid="uid://0q1agbtm2mrb" path="res://enemy_controller.gd" id="4_wujgv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wse8f"]
+resource_local_to_scene = true
 shader = ExtResource("1_iifgy")
 shader_parameter/tex = ExtResource("2_epg4t")
 shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/size_inverse = 10.0
 
-[node name="Enemy" type="ColorRect" node_paths=PackedStringArray("world")]
+[node name="Enemy" type="ColorRect"]
 material = SubResource("ShaderMaterial_wse8f")
 anchors_preset = 8
 anchor_left = 0.5
@@ -26,7 +27,6 @@ offset_bottom = 540.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_3yqyl")
-world = NodePath("")
 yaw = 3.14159265358979
 forward_max_speed = 200.0
 forward_accel = 300.0
