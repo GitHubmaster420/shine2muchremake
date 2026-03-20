@@ -45,6 +45,8 @@ func _ready() -> void:
 	if created_at_start:
 		basis = Basis.from_euler(Vector3(yaw, pitch, roll))
 	sphere_pos = basis.z
+	(material as ShaderMaterial).set_shader_parameter("world_rot", world.basis) #TODO: understand why not inverse lol
+	(material as ShaderMaterial).set_shader_parameter("player_rot", basis.inverse())
 
 func _physics_process(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, input_dir.x * roll_max_speed, delta * roll_accel)
@@ -62,5 +64,6 @@ func _physics_process(delta: float) -> void:
 		b.visible = false
 		(b as Bullet).basis = basis.rotated(basis.x, ((player_radius + b.player_radius) / radius * PI + 0.001))
 		(b as Bullet).world = world
-		world.add_child(b)
+		world.non_euclidean_world.add_child(b)
+		b.position = Vector2.ZERO
 		world.bullets.append(b)

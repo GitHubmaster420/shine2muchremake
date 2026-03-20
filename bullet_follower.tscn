@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://pref304axug5"]
+
+[ext_resource type="Script" uid="uid://kmw40pd8rn2a" path="res://bullet_follower.gd" id="1_dpykr"]
+[ext_resource type="Texture2D" uid="uid://c1xttrwwnq8oq" path="res://moon.png" id="2_06f0i"]
+[ext_resource type="Script" uid="uid://15yjh2ppq1k3" path="res://bullet_sprte.gd" id="3_gip25"]
+
+[node name="BulletFollower" type="Node3D"]
+script = ExtResource("1_dpykr")
+
+[node name="BulletSprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+texture = ExtResource("2_06f0i")
+script = ExtResource("3_gip25")

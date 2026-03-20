@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsi1qtpjlla5i"
-path.s3tc="res://.godot/imported/earth.png-427b2c0c994c1a58b125d5b7ff37203f.s3tc.ctex"
+uid="uid://cbu8vpim354ta"
+path.s3tc="res://.godot/imported/UCLBall.png-a5329fd44d5185aaeca6361d01626be8.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://earth.png"
-dest_files=["res://.godot/imported/earth.png-427b2c0c994c1a58b125d5b7ff37203f.s3tc.ctex"]
+source_file="res://UCLBall.png"
+dest_files=["res://.godot/imported/UCLBall.png-a5329fd44d5185aaeca6361d01626be8.s3tc.ctex"]
 
 [params]
 

@@ -6,7 +6,7 @@ var time_until_next_shot := 5.0
 
 func _physics_process(delta: float) -> void:
 	player.input_dir.y = 1
-	player.input_dir.x = sin(Time.get_ticks_msec() / 1000.0)
+	player.input_dir.x = sin(Time.get_ticks_msec() / 500.0)
 	time_until_next_shot -= delta
 	if time_until_next_shot < 0:
 		player.is_shot_just_pressed = true

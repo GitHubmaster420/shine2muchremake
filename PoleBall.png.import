@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsi1qtpjlla5i"
-path.s3tc="res://.godot/imported/earth.png-427b2c0c994c1a58b125d5b7ff37203f.s3tc.ctex"
+uid="uid://tgt7t30pkqne"
+path.s3tc="res://.godot/imported/PoleBall.png-1a1fd9406220e34e50d2b90ec0248ab2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://earth.png"
-dest_files=["res://.godot/imported/earth.png-427b2c0c994c1a58b125d5b7ff37203f.s3tc.ctex"]
+source_file="res://PoleBall.png"
+dest_files=["res://.godot/imported/PoleBall.png-1a1fd9406220e34e50d2b90ec0248ab2.s3tc.ctex"]
 
 [params]
 

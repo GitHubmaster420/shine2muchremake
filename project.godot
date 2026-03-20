@@ -50,3 +50,4 @@ down={
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.27450982, 0.28627452, 0.43529412, 1)

@@ -1,9 +1,14 @@
 class_name World extends Node2D
 
-@onready var world_surface: ColorRect = $WorldSurface
-@onready var player: Player = $Player
+@onready var world_surface: ColorRect = $SubViewportContainer/SubViewport/NonEuclideanWorld/WorldSurface
+@onready var player: Player = $SubViewportContainer/SubViewport/NonEuclideanWorld/Player
+
+
+@onready var sphere_world: Node3D = $SubViewport/SphereWorld
+@onready var non_euclidean_world: Node2D = $SubViewportContainer/SubViewport/NonEuclideanWorld
 
 const EXPLOSION = preload("uid://c2d7cuatruidk")
+const ENEMY_FOLLOWER = preload("uid://invktu518qg5")
 
 @export var radius := 100.0
 
@@ -62,7 +67,12 @@ func _physics_process(_delta: float) -> void:
 					new_enemy.created_at_start = false
 					new_enemy.basis = player.basis.rotated(player.basis.x.rotated(player.basis.z, randf_range(-PI, PI)), randf_range(PI/2.0, PI))
 					new_enemy.world = self
-					add_child(new_enemy)
+					new_enemy.visible = true
+					non_euclidean_world.add_child(new_enemy)
+					var pf : PlayerFollower = ENEMY_FOLLOWER.instantiate()
+					pf.player = new_enemy
+					sphere_world.add_child(pf)
+					new_enemy.position = Vector2.ZERO
 					players.append(new_enemy)
 					
 	if not player:

@@ -8,6 +8,8 @@ var sphere_pos : Vector3
 
 var basis : Basis = Basis.IDENTITY
 
+const BULLET_FOLLOWER = preload("uid://pref304axug5")
+
 @export var forward_max_speed := 50.0 # pixels/s
 @export var forward_accel := 50.0 # pixels/s^2
 
@@ -29,6 +31,9 @@ func _ready() -> void:
 	sphere_pos = basis.z
 	await get_tree().physics_frame
 	visible = true
+	var bf : BulletFollower = BULLET_FOLLOWER.instantiate()
+	bf.bullet = self
+	world.sphere_world.add_child(bf)
 
 func _physics_process(delta: float) -> void:
 	basis = basis.rotated(basis.x.normalized(), velocity.x * delta).orthonormalized()

@@ -13,6 +13,7 @@ shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/size_inverse = 20.0
 
 [node name="Bullet" type="ColorRect"]
+z_index = 1
 material = SubResource("ShaderMaterial_t2bd8")
 anchors_preset = 8
 anchor_left = 0.5
