@@ -7,7 +7,7 @@ void vertex() {
 }
 
 void fragment() {
-	vec2 uv = vec2(UV.x, 1.0 - UV.y);
+	vec2 uv = vec2(UV.x, UV.y);
 	COLOR = texture(tex, uv);
 }
 

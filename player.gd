@@ -25,6 +25,7 @@ var forward_rad_accel : float
 
 var velocity := Vector2.ZERO # local x rot, local y rot (rad)
 const BULLET = preload("uid://bm51xp3emdojp")
+const LASER_BEAM = preload("uid://ch3lygrrqiqd0")
 
 @export var player_radius := 10.0
 
@@ -32,9 +33,15 @@ const BULLET = preload("uid://bm51xp3emdojp")
 
 var is_shot_just_pressed := false
 
+var is_shot_just_released := false
+
+var is_shot_pressed := false
+
 var input_dir := Vector2.ZERO
 
 var created_at_start := true
+
+var current_beam : LaserBeam
 
 func _ready() -> void:
 	forward_rad_max_speed = forward_max_speed / radius
@@ -58,12 +65,35 @@ func _physics_process(delta: float) -> void:
 	(material as ShaderMaterial).set_shader_parameter("player_rot", basis.inverse())
 	
 	if is_shot_just_pressed:
-		world.audio_stream_player.stream = LASER_SHOOT
-		world.audio_stream_player.play()
-		var b : Bullet = BULLET.instantiate()
-		b.visible = false
-		(b as Bullet).basis = basis.rotated(basis.x, ((player_radius + b.player_radius) / radius * PI + 0.001))
-		(b as Bullet).world = world
-		world.non_euclidean_world.add_child(b)
-		b.position = Vector2.ZERO
-		world.bullets.append(b)
+		is_shot_pressed = true
+		if not world.shoot_beams:
+			world.audio_stream_player.stream = LASER_SHOOT
+			world.audio_stream_player.play()
+			var b : Bullet = BULLET.instantiate()
+			b.visible = false
+			(b as Bullet).basis = basis.rotated(basis.x, ((player_radius + b.player_radius) / radius * PI + 0.001))
+			(b as Bullet).world = world
+			world.non_euclidean_world.add_child(b)
+			b.position = Vector2.ZERO
+			world.bullets.append(b)
+		else:
+			current_beam = LASER_BEAM.instantiate()
+			current_beam.start_point = basis.z.rotated(basis.x, ((player_radius + current_beam.radius) / radius * PI + 0.001))
+			current_beam.rotate_around = basis.x
+			current_beam.world = world
+			world.non_euclidean_world.add_child(current_beam)
+			current_beam.position = Vector2.ZERO
+	if world.shoot_beams:
+		if is_shot_pressed:
+			current_beam.start_point = basis.z.rotated(basis.x, ((player_radius + current_beam.radius) / radius * PI + 0.001))
+			current_beam.rotate_around = basis.x
+			current_beam.position = Vector2.ZERO
+		if is_shot_just_released:
+			is_shot_pressed = false
+			if current_beam:
+				current_beam.is_shot = true
+			current_beam = null
+
+func _exit_tree() -> void:
+	if current_beam:
+		current_beam.queue_free()

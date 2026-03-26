@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://6tygshsbrwir"]
+[gd_scene load_steps=27 format=3 uid="uid://6tygshsbrwir"]
 
 [ext_resource type="Script" uid="uid://bg4bmgnoyswjk" path="res://world.gd" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://bxrr62yiw7tjn" path="res://world.gdshader" id="1_fj7yv"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://c7kevfbna3mcb" path="res://player.gd" id="4_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://bsi1qtpjlla5i" path="res://earth.png" id="5_70uel"]
 [ext_resource type="Script" uid="uid://dsd568enkgmcn" path="res://player_controller.gd" id="7_ioo17"]
+[ext_resource type="Texture2D" uid="uid://btjahctbnnwm1" path="res://BaseballOutine.png" id="9_2u3nc"]
 [ext_resource type="Texture2D" uid="uid://bnlhxvq1qhmqg" path="res://CBSBall.png" id="9_hiqwa"]
 [ext_resource type="Texture2D" uid="uid://bcur187o7wsag" path="res://LavaPlanets.png" id="9_ioo17"]
 [ext_resource type="Script" uid="uid://ctqp5gl1c6oi2" path="res://world_ball.gd" id="11_k3n1d"]
@@ -36,7 +37,7 @@ void fragment() {
 "
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_2u3nc"]
-viewport_path = NodePath("SubViewportContainer/SubViewport")
+viewport_path = NodePath("SubViewport6")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k3n1d"]
 resource_local_to_scene = true
@@ -59,7 +60,7 @@ shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/size_inverse = 10.0
 
-[sub_resource type="Shader" id="Shader_2u3nc"]
+[sub_resource type="Shader" id="Shader_hiqwa"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -133,7 +134,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ic0uy"]
 resource_local_to_scene = true
-shader = SubResource("Shader_2u3nc")
+shader = SubResource("Shader_hiqwa")
 shader_parameter/tex = ExtResource("9_ioo17")
 shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
@@ -142,75 +143,67 @@ shader_parameter/size_inverse = 10.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aqk2v"]
 resource_local_to_scene = true
 shader = ExtResource("1_fj7yv")
-shader_parameter/tex = ExtResource("9_hiqwa")
+shader_parameter/tex = ExtResource("9_2u3nc")
 shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2o6r5"]
+cull_mode = 2
 shading_mode = 0
 albedo_texture = ExtResource("9_hiqwa")
 
 [sub_resource type="SphereMesh" id="SphereMesh_70uel"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("score_label")]
+[node name="World" type="Node2D" node_paths=PackedStringArray("world_surface", "player", "sphere_world", "non_euclidean_world", "score_label", "audio_stream_player")]
 script = ExtResource("1_036b0")
+world_surface = NodePath("SubViewport6/NonEuclideanWorld/WorldSurface")
+player = NodePath("SubViewport6/NonEuclideanWorld/Player")
+shoot_beams = true
+sphere_world = NodePath("SubViewport/SphereWorld")
+non_euclidean_world = NodePath("SubViewport6/NonEuclideanWorld")
 radius = 200.0
 enemy_scene = ExtResource("2_gbfbk")
 score_label = NodePath("CanvasLayer/Label")
+audio_stream_player = NodePath("AudioStreamPlayer")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="GameView" type="ColorRect" parent="."]
 z_index = 10
 material = SubResource("ShaderMaterial_k3n1d")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = -500.0
 offset_top = -500.0
 offset_right = 500.0
 offset_bottom = 500.0
-grow_horizontal = 2
-grow_vertical = 2
+grow_horizontal = 0
+grow_vertical = 0
 
 [node name="GameView2" type="ColorRect" parent="."]
 visible = false
 z_index = 10
 material = SubResource("ShaderMaterial_2u3nc")
-offset_left = 200.0
-offset_top = 200.0
-offset_right = 440.0
-offset_bottom = 440.0
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-z_index = 1
-texture_filter = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -540.0
-offset_top = -540.0
+offset_left = 300.0
+offset_top = 300.0
 offset_right = 540.0
 offset_bottom = 540.0
-grow_horizontal = 2
-grow_vertical = 2
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewport6" type="SubViewport" parent="."]
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(1080, 1080)
-render_target_update_mode = 4
 
-[node name="NonEuclideanWorld" type="Node2D" parent="SubViewportContainer/SubViewport"]
+[node name="NonEuclideanWorld" type="Node2D" parent="SubViewport6"]
+process_mode = 3
 
-[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport/NonEuclideanWorld"]
+[node name="Camera2D" type="Camera2D" parent="SubViewport6/NonEuclideanWorld"]
 anchor_mode = 0
 ignore_rotation = false
 
-[node name="Player" type="ColorRect" parent="SubViewportContainer/SubViewport/NonEuclideanWorld" node_paths=PackedStringArray("world")]
+[node name="Player" type="ColorRect" parent="SubViewport6/NonEuclideanWorld" node_paths=PackedStringArray("world")]
 z_index = 3
 material = SubResource("ShaderMaterial_036b0")
 anchors_preset = 8
@@ -223,25 +216,25 @@ offset_bottom = 1080.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_aqk2v")
-world = NodePath("../../../..")
+world = NodePath("../../..")
 forward_max_speed = 200.0
 forward_accel = 300.0
 roll_accel = 9.426
 controlled_by_player = true
 
-[node name="PlayerController" type="Node" parent="SubViewportContainer/SubViewport/NonEuclideanWorld/Player" node_paths=PackedStringArray("player")]
+[node name="PlayerController" type="Node" parent="SubViewport6/NonEuclideanWorld/Player" node_paths=PackedStringArray("player")]
 script = ExtResource("7_ioo17")
 player = NodePath("..")
 
-[node name="Enemy" parent="SubViewportContainer/SubViewport/NonEuclideanWorld" node_paths=PackedStringArray("world") instance=ExtResource("2_gbfbk")]
+[node name="Enemy" parent="SubViewport6/NonEuclideanWorld" node_paths=PackedStringArray("world") instance=ExtResource("2_gbfbk")]
 material = SubResource("ShaderMaterial_ic0uy")
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 1080.0
 offset_bottom = 1080.0
-world = NodePath("../../../..")
+world = NodePath("../../..")
 
-[node name="WorldSurface" type="ColorRect" parent="SubViewportContainer/SubViewport/NonEuclideanWorld"]
+[node name="WorldSurface" type="ColorRect" parent="SubViewport6/NonEuclideanWorld"]
 material = SubResource("ShaderMaterial_aqk2v")
 anchors_preset = 8
 anchor_left = 0.5
@@ -274,7 +267,6 @@ transparent_bg = true
 size = Vector2i(1080, 1080)
 
 [node name="SphereWorld" type="Node3D" parent="SubViewport"]
-visible = false
 
 [node name="WorldBall" type="MeshInstance3D" parent="SubViewport/SphereWorld" node_paths=PackedStringArray("world")]
 material_override = SubResource("StandardMaterial3D_2o6r5")
@@ -284,7 +276,7 @@ world = NodePath("../../..")
 
 [node name="PlayerFollower" type="Node3D" parent="SubViewport/SphereWorld" node_paths=PackedStringArray("player")]
 script = ExtResource("12_k3n1d")
-player = NodePath("../../../SubViewportContainer/SubViewport/NonEuclideanWorld/Player")
+player = NodePath("../../../SubViewport6/NonEuclideanWorld/Player")
 main_player = true
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport/SphereWorld/PlayerFollower"]
@@ -293,14 +285,18 @@ projection = 1
 near = 0.305
 
 [node name="PlayerSprite" type="Sprite3D" parent="SubViewport/SphereWorld/PlayerFollower"]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0.5)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0.58435166)
 pixel_size = 0.0001
+no_depth_test = true
 texture = ExtResource("5_70uel")
 script = ExtResource("13_2o6r5")
 
+[node name="InnerCameraParent" type="Node3D" parent="SubViewport/SphereWorld/PlayerFollower"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
 [node name="PlayerFollower2" parent="SubViewport/SphereWorld" node_paths=PackedStringArray("player") instance=ExtResource("14_70uel")]
 transform = Transform3D(0.777058, 0, 0.6294288, 0, 1, 0, -0.6294288, 0, 0.777058, 0, 0, 0)
-player = NodePath("../../../SubViewportContainer/SubViewport/NonEuclideanWorld/Enemy")
+player = NodePath("../../../SubViewport6/NonEuclideanWorld/Enemy")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 z_index = 9

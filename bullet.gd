@@ -1,5 +1,10 @@
 class_name Bullet extends ColorRect
 
+@export var min_size := 10.0
+@export var max_size := 540.0
+
+const SCREEN_SIZE := 1080 * Vector2.ONE
+
 @export var world : World
 
 @onready var radius := world.radius
@@ -38,5 +43,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	basis = basis.rotated(basis.x.normalized(), velocity.x * delta).orthonormalized()
 	sphere_pos = basis.z
+	size = Vector2.ONE * (lerpf(max_size, min_size, (world.basis.z.dot(basis.z) + 1) * 0.5))
+	scale = SCREEN_SIZE / size
+	#doesn't do anything now, still rendered at same resolution
 	(material as ShaderMaterial).set_shader_parameter("world_rot", world.basis) #TODO: understand why not inverse lol
 	(material as ShaderMaterial).set_shader_parameter("player_rot", basis.inverse())

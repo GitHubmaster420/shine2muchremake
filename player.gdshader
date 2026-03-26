@@ -55,14 +55,11 @@ void fragment() {
 	surface_location = player_rot * world_rot  * surface_location;
 	vec2 uv_sphere = sphere_to_uv(surface_location);
 	uv_sphere -= vec2(0.5);
-	
+
 	uv_sphere *= size_inverse;
 	if(uv_sphere.x < -0.5 || uv_sphere.x > 0.5 || uv_sphere.y < -0.5 || uv_sphere.y > 0.5){
 		discard;
 	}
 	uv_sphere += vec2(0.5);
-	
-	
-
 	COLOR = texture(tex, uv_sphere);
 }

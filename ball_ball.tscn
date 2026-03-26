@@ -1,0 +1,253 @@
+[gd_scene load_steps=25 format=3 uid="uid://brycgchpdvb0x"]
+
+[ext_resource type="Script" uid="uid://bd7ls4mbojm5u" path="res://ball_ball.gd" id="1_lnwn0"]
+[ext_resource type="Shader" uid="uid://bxrr62yiw7tjn" path="res://world.gdshader" id="2_mw880"]
+[ext_resource type="Script" uid="uid://dm0hujakkqcsx" path="res://ball.gd" id="3_aq1fw"]
+[ext_resource type="Texture2D" uid="uid://c1xttrwwnq8oq" path="res://moon.png" id="3_hut2f"]
+[ext_resource type="Shader" uid="uid://bejysw8nhhpfh" path="res://player.gdshader" id="3_oi3m5"]
+[ext_resource type="Shader" uid="uid://t6nc1v7hb6hm" path="res://world_viewport.gdshader" id="4_0f3op"]
+[ext_resource type="Texture2D" uid="uid://bsi1qtpjlla5i" path="res://earth.png" id="4_1h0kg"]
+[ext_resource type="Shader" uid="uid://d00pc36b3d5pn" path="res://field.gdshader" id="5_765ue"]
+[ext_resource type="Script" uid="uid://cfha7xt3jdlyy" path="res://field_player.gd" id="6_1h0kg"]
+[ext_resource type="Script" uid="uid://dsd568enkgmcn" path="res://player_controller.gd" id="6_aul4p"]
+[ext_resource type="Script" uid="uid://dls3kgnjlrx3f" path="res://field.gd" id="6_oi3m5"]
+[ext_resource type="Texture2D" uid="uid://dspn7nsn5v6rq" path="res://icon.svg" id="9_hfa1s"]
+[ext_resource type="Script" uid="uid://diy8ngiv2wgto" path="res://field_player_ai.gd" id="10_t2pif"]
+[ext_resource type="Script" uid="uid://y7pf7q4d86ws" path="res://chase_ball.gd" id="11_hfa1s"]
+[ext_resource type="Script" uid="uid://dbnp2kh1b40tn" path="res://defend_goal.gd" id="12_wmgvf"]
+[ext_resource type="Script" uid="uid://bgi0yxcln244j" path="res://attack_goal.gd" id="13_qxbrk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hut2f"]
+shader = ExtResource("3_oi3m5")
+shader_parameter/tex = ExtResource("3_hut2f")
+shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/size_inverse = 10.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_qm886"]
+viewport_path = NodePath("SubViewportContainer2/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qm886"]
+resource_local_to_scene = true
+shader = ExtResource("2_mw880")
+shader_parameter/tex = SubResource("ViewportTexture_qm886")
+shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aul4p"]
+shader = ExtResource("3_oi3m5")
+shader_parameter/tex = ExtResource("4_1h0kg")
+shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/size_inverse = 10.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t2pif"]
+shader = ExtResource("3_oi3m5")
+shader_parameter/tex = ExtResource("9_hfa1s")
+shader_parameter/world_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/player_rot = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/size_inverse = 10.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0f3op"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_765ue"]
+resource_local_to_scene = true
+shader = ExtResource("4_0f3op")
+shader_parameter/tex = SubResource("ViewportTexture_0f3op")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1h0kg"]
+shader = ExtResource("5_765ue")
+shader_parameter/goal_1_color = Color(1, 0, 0, 1)
+shader_parameter/goal_2_color = Color(0, 0, 1, 1)
+shader_parameter/field_color = Color(1, 1, 1, 1)
+shader_parameter/mid_line_color = Color(0.7121294, 0.7121294, 0.71212935, 1)
+shader_parameter/goal_1_radius = 0.1
+shader_parameter/goal_2_radius = 0.1
+shader_parameter/line_thickness = 0.0499999988824
+
+[node name="BallBall" type="Node2D" node_paths=PackedStringArray("ball", "field", "world_surface", "player", "non_euclidean_world", "score_label")]
+script = ExtResource("1_lnwn0")
+ball = NodePath("SubViewportContainer/SubViewport/NonEuclideanWorld/Ball")
+field = NodePath("SubViewportContainer2/SubViewport/Field")
+world_surface = NodePath("SubViewportContainer/SubViewport/NonEuclideanWorld/WorldSurface")
+player = NodePath("SubViewportContainer/SubViewport/NonEuclideanWorld/FieldPlayer")
+non_euclidean_world = NodePath("SubViewportContainer/SubViewport/NonEuclideanWorld")
+radius = 150.0
+score_label = NodePath("CanvasLayer/Label")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+z_index = 1
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -540.0
+offset_right = 540.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1080, 1080)
+render_target_update_mode = 4
+
+[node name="NonEuclideanWorld" type="Node2D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Ball" type="ColorRect" parent="SubViewportContainer/SubViewport/NonEuclideanWorld" node_paths=PackedStringArray("world", "field")]
+z_index = 450
+material = SubResource("ShaderMaterial_hut2f")
+offset_right = 1080.0
+offset_bottom = 1080.0
+script = ExtResource("3_aq1fw")
+world = NodePath("../../../..")
+field = NodePath("../../../../SubViewportContainer2/SubViewport/Field")
+forward_max_speed = 600.0
+player_radius = 5.0
+goal_growth_when_controlled = 2.5
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport/NonEuclideanWorld"]
+anchor_mode = 0
+ignore_rotation = false
+
+[node name="WorldSurface" type="ColorRect" parent="SubViewportContainer/SubViewport/NonEuclideanWorld"]
+material = SubResource("ShaderMaterial_qm886")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 1080.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FieldPlayer" type="ColorRect" parent="SubViewportContainer/SubViewport/NonEuclideanWorld" node_paths=PackedStringArray("world")]
+z_index = 9
+material = SubResource("ShaderMaterial_aul4p")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 1080.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_1h0kg")
+on_team_1 = true
+world = NodePath("../../../..")
+forward_max_speed = 150.0
+forward_accel = 150.0
+roll_max_speed = 6.283
+roll_accel = 6.283
+
+[node name="PlayerController" type="Node" parent="SubViewportContainer/SubViewport/NonEuclideanWorld/FieldPlayer" node_paths=PackedStringArray("player")]
+script = ExtResource("6_aul4p")
+player = NodePath("..")
+metadata/_custom_type_script = "uid://dsd568enkgmcn"
+
+[node name="FieldPlayer2" type="ColorRect" parent="SubViewportContainer/SubViewport/NonEuclideanWorld" node_paths=PackedStringArray("world")]
+z_index = 9
+material = SubResource("ShaderMaterial_t2pif")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 1080.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_1h0kg")
+world = NodePath("../../../..")
+forward_max_speed = 150.0
+forward_accel = 150.0
+roll_max_speed = 6.283
+roll_accel = 6.283
+
+[node name="FieldPlayerAi" type="Node" parent="SubViewportContainer/SubViewport/NonEuclideanWorld/FieldPlayer2" node_paths=PackedStringArray("player", "current_state", "chase_ball", "defend_goal", "attack_goal")]
+script = ExtResource("10_t2pif")
+player = NodePath("..")
+current_state = NodePath("ChaseBall")
+chase_ball = NodePath("ChaseBall")
+defend_goal = NodePath("DefendGoal")
+attack_goal = NodePath("AttackGoal")
+
+[node name="ChaseBall" type="Node" parent="SubViewportContainer/SubViewport/NonEuclideanWorld/FieldPlayer2/FieldPlayerAi" node_paths=PackedStringArray("player")]
+script = ExtResource("11_hfa1s")
+player = NodePath("../..")
+
+[node name="DefendGoal" type="Node" parent="SubViewportContainer/SubViewport/NonEuclideanWorld/FieldPlayer2/FieldPlayerAi" node_paths=PackedStringArray("player")]
+script = ExtResource("12_wmgvf")
+player = NodePath("../..")
+metadata/_custom_type_script = "uid://detgfhvle4f4e"
+
+[node name="AttackGoal" type="Node" parent="SubViewportContainer/SubViewport/NonEuclideanWorld/FieldPlayer2/FieldPlayerAi" node_paths=PackedStringArray("player")]
+script = ExtResource("13_qxbrk")
+player = NodePath("../..")
+metadata/_custom_type_script = "uid://detgfhvle4f4e"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = 186
+material = SubResource("ShaderMaterial_765ue")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -450.0
+offset_right = 450.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer2" type="SubViewportContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer2"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Field" type="ColorRect" parent="SubViewportContainer2/SubViewport" node_paths=PackedStringArray("world")]
+material = SubResource("ShaderMaterial_1h0kg")
+offset_right = 512.0
+offset_bottom = 512.0
+script = ExtResource("6_oi3m5")
+world = NodePath("../../..")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = 115
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1000.0
+offset_top = -1000.0
+offset_right = 1000.0
+offset_bottom = 1000.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.27450982, 0.28627452, 0.43529412, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 15.0
+offset_right = -15.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 60
+text = "Score: 0 - 0"

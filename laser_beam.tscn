@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://ch3lygrrqiqd0"]
+
+[ext_resource type="Shader" uid="uid://dct744bmqaaj0" path="res://laser_beam.gdshader" id="1_dqaer"]
+[ext_resource type="Script" uid="uid://bltdiwce6oyrn" path="res://laser_beam.gd" id="2_ni8j5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_26xuy"]
+resource_local_to_scene = true
+shader = ExtResource("1_dqaer")
+shader_parameter/A = Vector3(0, 0, 1)
+shader_parameter/B = Vector3(0, 1, 0)
+shader_parameter/cosRadius = 0.2
+shader_parameter/color = Color(0.68235224, 0.29418394, 1, 1)
+shader_parameter/wrap_around = false
+shader_parameter/alpha_m = 1.0
+
+[node name="LaserBeam" type="ColorRect"]
+material = SubResource("ShaderMaterial_26xuy")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 1080.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_ni8j5")
+radius = 2.0
+velocity = 300.0
+grow_rate = 400.0
